@@ -8,9 +8,13 @@ repo
 |
 - PostGIS
 |
+Container will use `as is `
+
 - Redis
 |
+Container will use `as is `
 - Routing graph creator
+
 |
 ** Implemented **
 - Script for convert GPKG lines file to internal python routing graph file

@@ -3,8 +3,8 @@ repo
 - backend: celery queue
 |
 ** Implemented **
-|
-- Код который ставит в очередь задачу на 60 секунд, и её выполняет
+- Docker-compose
+- /health
 |
 - PostGIS
 |
@@ -13,7 +13,9 @@ Container will use `as is `
 - Redis
 |
 Container will use `as is `
-- Routing graph creator
+- Routing graph creator|
+- Код который ставит в очередь задачу на 60 секунд, и её выполняет
+
 
 |
 ** Implemented **

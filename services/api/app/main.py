@@ -1,6 +1,6 @@
 """Точка входа FastAPI-приложения."""
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from celery.result import AsyncResult
@@ -54,6 +54,36 @@ def generate_image(req: GenerateRequest):
         "task_id": async_result.id,
         "status": "PENDING",
         "message": f"Задача {IMAGE_GENERATE_TASK} поставлена в очередь",
+    }
+
+
+@app.get("/queue-length", tags=["queue"])
+async def queue_length():
+    """Возвращает длину очереди Celery в Redis (число ожидающих задач).
+
+    Брокер Celery — Redis: очередь хранится как список (list) с ключом,
+    равным имени очереди (по умолчанию ``celery``), поэтому длина
+    получается командой LLEN. Если воркер занят, задачи дополнительно
+    лежат в hash-ключе ``unacked`` (HLEN) до подтверждения получения.
+    """
+    client = redis.from_url(settings.redis_url, decode_responses=True)
+    try:
+        queue_name = celery_client.conf.task_default_queue or "celery"
+        pending = await client.llen(queue_name)
+        unacked = await client.hlen("unacked")
+    except Exception as exc:
+        raise HTTPException(
+            status_code=503,
+            detail={"error": "redis_unavailable", "message": str(exc)},
+        ) from exc
+    finally:
+        await client.aclose()
+
+    return {
+        "queue": queue_name,
+        "pending": pending,
+        "in_flight": unacked,
+        "total": pending + unacked,
     }
 
 

@@ -32,7 +32,7 @@ def generate_png(self, route_geojson: str, kind: str = "user") -> dict:
 
     """
     # Имитация тяжёлой работы
-    seconds=69
+    seconds=15
     for step in range(1, seconds):
         time.sleep(1)
         self.update_state(

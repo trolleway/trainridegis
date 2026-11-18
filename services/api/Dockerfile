@@ -12,9 +12,17 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# Установка пакета и зависимостей
+# Установка зависимостей (кешируется докером) и основного кода
+# 1. Копируем только файл с зависимостями
+COPY pyproject.toml .
+
+# 2. Создаем пустую папку пакета (чтобы pip не ругался при установке) и ставим только зависимости
+RUN mkdir -p app && pip install --no-cache-dir .
+
+# 3. Копируем весь остальной код и устанавливаем сам проект без повторной проверки зависимостей
 COPY . .
-RUN pip install --no-cache-dir .
+RUN pip install --no-cache-dir --no-deps .
+
 
 EXPOSE 8000
 

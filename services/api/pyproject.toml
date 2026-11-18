@@ -17,6 +17,8 @@ dependencies = [
     "passlib[bcrypt]>=1.7",
     "pyjwt>=2",
     "alembic>=1.13",
+    "celery>=5.4.0",
+    "redis>=6.1.0",
 ]
 
 [build-system]

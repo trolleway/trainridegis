@@ -67,25 +67,25 @@ services:
       redis:
         condition: service_healthy
 
-#  render-worker:
-#    build: ./services/render-worker
-#    container_name: trainridegis-render-worker
-#    restart: unless-stopped
-#    environment:
-#      APP_ENV: development
-#      REDIS_URL: redis://redis:6379/0
-#      CELERY_BROKER_URL: redis://redis:6379/0
-#      CELERY_RESULT_BACKEND: redis://redis:6379/0
-#      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-rail}:${POSTGRES_PASSWORD:-rail}@db:5432/${POSTGRES_DB:-railgis}
-#      RENDER_MODE: mock
-#    volumes:
-#      - ./services/render-worker:/app
-#      - render_volume:/app/renders
-#    depends_on:
-#      redis:
-#        condition: service_healthy
-#      db:
-#        condition: service_healthy
+  render-worker:
+    build: ./services/render-worker
+    container_name: trainridegis-render-worker
+    restart: unless-stopped
+    environment:
+      APP_ENV: development
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/0
+      CELERY_RESULT_BACKEND: redis://redis:6379/0
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-rail}:${POSTGRES_PASSWORD:-rail}@db:5432/${POSTGRES_DB:-railgis}
+      RENDER_MODE: mock
+    volumes:
+      - ./services/render-worker:/app
+      - render_volume:/app/renders
+    depends_on:
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
 
 #  frontend:
 #    build: ./services/frontend

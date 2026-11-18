@@ -71,6 +71,8 @@ services:
     build: ./services/render-worker
     container_name: trainridegis-render-worker
     restart: unless-stopped
+    # Celery в одном процессе (solo-pool) — без форков, безопасно для PyQGIS
+    command: ["celery", "-A", "app.worker:celery_app", "worker", "--loglevel=info", "--pool=solo"]
     environment:
       APP_ENV: development
       REDIS_URL: redis://redis:6379/0
